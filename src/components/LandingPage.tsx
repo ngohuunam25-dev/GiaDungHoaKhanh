@@ -1,19 +1,20 @@
 "use client";
 
-import React, { useState } from "react";
+import { PRODUCT_PACKAGES, ProductPackage } from "@/content/siteContent";
+import { useState } from "react";
+import Footer from "./Footer";
 import Header from "./Header";
 import HeroSection from "./HeroSection";
-import ProductDemoSection from "./ProductDemoSection";
-import ProblemSolutionSection from "./ProblemSolutionSection";
-import SocialProofSection from "./SocialProofSection";
-import PricingSection, { PRODUCT_PACKAGES, ProductPackage } from "./PricingSection";
 import OrderFormSection from "./OrderFormSection";
+import PricingSection from "./PricingSection";
+import ProblemSolutionSection from "./ProblemSolutionSection";
+import ProductDemoSection from "./ProductDemoSection";
+import SocialProofSection from "./SocialProofSection";
 import StickyMobileCTA from "./StickyMobileCTA";
-import Footer from "./Footer";
 
 export default function LandingPage() {
   const [selectedPackage, setSelectedPackage] = useState<ProductPackage>(
-    PRODUCT_PACKAGES[0]
+    PRODUCT_PACKAGES[0],
   );
   const [quantity, setQuantity] = useState<number>(1);
 
@@ -23,7 +24,7 @@ export default function LandingPage() {
       <Header />
 
       {/* Main Content Area */}
-      <main className="flex flex-col relative w-full pt-16 pb-24 sm:pb-20 bg-surface min-h-screen">
+      <main className="flex flex-col relative w-full pt-14 pb-24 sm:pb-20 bg-surface min-h-screen">
         {/* SECTION 1: HERO & PRIMARY PRODUCT GALLERY */}
         <HeroSection />
 
@@ -57,10 +58,7 @@ export default function LandingPage() {
       </main>
 
       {/* SECTION 7: STICKY MOBILE CTA BAR */}
-      <StickyMobileCTA
-        selectedPackage={selectedPackage}
-        quantity={quantity}
-      />
+      <StickyMobileCTA selectedPackage={selectedPackage} quantity={quantity} />
     </div>
   );
 }

@@ -1,24 +1,27 @@
 "use client";
 
-import React, { useState } from "react";
 import {
-  ShoppingCart,
-  CheckCircle2,
-  AlertCircle,
-  Loader2,
-  ShieldCheck,
-  Package,
-  X,
-  Phone,
-  User,
-  MapPin,
-  FileText,
-  Minus,
-  Plus,
-} from "lucide-react";
-import { PRODUCT_PACKAGES, ProductPackage } from "./PricingSection";
+  ORDER_FORM_CONTENT,
+  PRODUCT_PACKAGES,
+  ProductPackage,
+} from "@/content/siteContent";
+import { generateEventId, trackLeadSubmission } from "@/lib/analytics/tiktok";
 import { formatVND } from "@/lib/utils";
-import { trackLeadSubmission, generateEventId } from "@/lib/analytics/tiktok";
+import {
+  AlertCircle,
+  CheckCircle2,
+  Loader2,
+  MapPin,
+  Minus,
+  Package,
+  Phone,
+  Plus,
+  ShieldCheck,
+  ShoppingCart,
+  User,
+  X,
+} from "lucide-react";
+import React, { useState } from "react";
 
 interface OrderFormSectionProps {
   selectedPackage: ProductPackage;
@@ -60,23 +63,19 @@ export default function OrderFormSection({
 
     // Client-side validations
     if (!fullName.trim() || fullName.trim().length < 2) {
-      setErrorMessage("Vui lòng nhập họ tên người nhận hàng.");
+      setErrorMessage(ORDER_FORM_CONTENT.validation.fullNameRequired);
       return;
     }
 
     const cleanPhone = phone.replace(/[\s.-]/g, "");
     const phoneRegex = /^(0|\+84)[3|5|7|8|9][0-9]{8}$/;
     if (!phoneRegex.test(cleanPhone)) {
-      setErrorMessage(
-        "Số điện thoại không hợp lệ. Vui lòng nhập đúng số di động 10 số (ví dụ: 0912 345 678)."
-      );
+      setErrorMessage(ORDER_FORM_CONTENT.validation.phoneInvalid);
       return;
     }
 
     if (!address.trim() || address.trim().length < 5) {
-      setErrorMessage(
-        "Vui lòng nhập địa chỉ nhận hàng chi tiết (số nhà, đường, xã/phường, quận/huyện)."
-      );
+      setErrorMessage(ORDER_FORM_CONTENT.validation.addressRequired);
       return;
     }
 
@@ -106,7 +105,9 @@ export default function OrderFormSection({
       const data = await response.json();
 
       if (!response.ok || !data.success) {
-        throw new Error(data.error || "Gửi đơn hàng thất bại. Vui lòng thử lại.");
+        throw new Error(
+          data.error || ORDER_FORM_CONTENT.validation.submitFailed,
+        );
       }
 
       // Track TikTok Lead (no PII sent)
@@ -117,7 +118,7 @@ export default function OrderFormSection({
           totalAmount: totalPrice,
           quantity,
         },
-        eventId
+        eventId,
       );
 
       // Show success modal
@@ -135,7 +136,10 @@ export default function OrderFormSection({
       setAddress("");
       setNotes("");
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Đã xảy ra lỗi không xác định.";
+      const msg =
+        err instanceof Error
+          ? err.message
+          : ORDER_FORM_CONTENT.validation.unknownError;
       setErrorMessage(msg);
     } finally {
       setIsSubmitting(false);
@@ -145,22 +149,22 @@ export default function OrderFormSection({
   return (
     <section
       id="order-form"
-      className="flex flex-col px-4 py-10 bg-surface-container-low/70 border-t border-outline-variant/20 scroll-mt-16 w-full"
+      className="flex flex-col px-4 py-8 bg-surface-container-low/70 border-t border-outline-variant/20 scroll-mt-16 w-full"
     >
       <div className="max-w-xl mx-auto w-full flex flex-col gap-6">
         {/* Section Header */}
         <div className="flex flex-col gap-1.5">
           <div className="flex items-center gap-1.5 text-secondary">
             <ShoppingCart className="w-5 h-5 text-secondary" />
-            <span className="text-xs font-bold uppercase tracking-widest">
-              Thủ tục đơn giản
+            <span className="text-xs font-extrabold uppercase tracking-widest">
+              {ORDER_FORM_CONTENT.sectionBadge}
             </span>
           </div>
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-primary tracking-tight">
-            Đặt Mua Lồng Bàn Inox Hoa Khánh
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-primary tracking-tight">
+            {ORDER_FORM_CONTENT.sectionTitle}
           </h2>
-          <p className="text-sm sm:text-base text-on-surface-variant leading-relaxed">
-            Điền thông tin bên dưới, nhân viên xưởng sẽ gọi điện xác nhận và gửi hàng ngay hôm nay.
+          <p className="text-xs sm:text-base text-on-surface-variant leading-relaxed">
+            {ORDER_FORM_CONTENT.sectionSubtitle}
           </p>
         </div>
 
@@ -179,11 +183,13 @@ export default function OrderFormSection({
             <div className="flex flex-col gap-1">
               <label
                 htmlFor="custName"
-                className="text-xs sm:text-sm font-bold text-on-surface flex items-center gap-1.5"
+                className="text-xs sm:text-sm font-extrabold text-on-surface flex items-center gap-1.5"
               >
                 <User className="w-4 h-4 text-primary" />
-                <span>Họ và tên người nhận</span>
-                <span className="text-error">*</span>
+                <span>{ORDER_FORM_CONTENT.fields.fullName.label}</span>
+                <span className="text-error">
+                  {ORDER_FORM_CONTENT.fields.fullName.requiredIndicator}
+                </span>
               </label>
               <input
                 id="custName"
@@ -191,8 +197,8 @@ export default function OrderFormSection({
                 required
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                placeholder="Ví dụ: Chị Lan / Anh Tuấn"
-                className="w-full h-12 px-3.5 rounded-xl bg-surface-container-lowest text-on-surface placeholder:text-outline/70 text-sm border border-outline-variant/40 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                placeholder={ORDER_FORM_CONTENT.fields.fullName.placeholder}
+                className="w-full h-12 px-3.5 rounded-xl bg-surface-container-lowest text-on-surface placeholder:text-outline/70 text-sm border border-outline-variant/40 focus:shadow-xs focus:ring-orange-500/50 focus:outline-none focus:ring-2  focus:border-transparent transition-all"
               />
             </div>
 
@@ -200,11 +206,13 @@ export default function OrderFormSection({
             <div className="flex flex-col gap-1">
               <label
                 htmlFor="custPhone"
-                className="text-xs sm:text-sm font-bold text-on-surface flex items-center gap-1.5"
+                className="text-xs sm:text-sm font-extrabold text-on-surface flex items-center gap-1.5"
               >
                 <Phone className="w-4 h-4 text-primary" />
-                <span>Số điện thoại nhận hàng</span>
-                <span className="text-error">*</span>
+                <span>{ORDER_FORM_CONTENT.fields.phone.label}</span>
+                <span className="text-error">
+                  {ORDER_FORM_CONTENT.fields.phone.requiredIndicator}
+                </span>
               </label>
               <input
                 id="custPhone"
@@ -212,8 +220,8 @@ export default function OrderFormSection({
                 required
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                placeholder="09x xxx xxxx (shipper gọi trước khi giao)"
-                className="w-full h-12 px-3.5 rounded-xl bg-surface-container-lowest text-on-surface placeholder:text-outline/70 text-sm border border-outline-variant/40 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                placeholder={ORDER_FORM_CONTENT.fields.phone.placeholder}
+                className="w-full h-12 px-3.5 rounded-xl bg-surface-container-lowest text-on-surface placeholder:text-outline/70 text-sm border border-outline-variant/40 focus:outline-none focus:ring-2 focus:shadow-xs focus:ring-orange-500/50 focus:border-transparent transition-all"
               />
             </div>
 
@@ -221,11 +229,13 @@ export default function OrderFormSection({
             <div className="flex flex-col gap-1">
               <label
                 htmlFor="custAddress"
-                className="text-xs sm:text-sm font-bold text-on-surface flex items-center gap-1.5"
+                className="text-xs sm:text-sm font-extrabold text-on-surface flex items-center gap-1.5"
               >
                 <MapPin className="w-4 h-4 text-primary" />
-                <span>Địa chỉ giao hàng chi tiết</span>
-                <span className="text-error">*</span>
+                <span>{ORDER_FORM_CONTENT.fields.address.label}</span>
+                <span className="text-error">
+                  {ORDER_FORM_CONTENT.fields.address.requiredIndicator}
+                </span>
               </label>
               <textarea
                 id="custAddress"
@@ -233,8 +243,8 @@ export default function OrderFormSection({
                 rows={2}
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
-                placeholder="Số nhà, tên ngõ/đường, thôn xóm, phường/xã, quận/huyện, tỉnh/thành phố..."
-                className="w-full p-3.5 rounded-xl bg-surface-container-lowest text-on-surface placeholder:text-outline/70 text-sm border border-outline-variant/40 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all resize-none"
+                placeholder={ORDER_FORM_CONTENT.fields.address.placeholder}
+                className="w-full p-3.5 rounded-xl bg-surface-container-lowest text-on-surface placeholder:text-outline/70 text-sm border border-outline-variant/40 focus:outline-none focus:ring-2 focus:shadow-xs focus:ring-orange-500/50 focus:border-transparent transition-all resize-none"
               />
             </div>
 
@@ -243,10 +253,10 @@ export default function OrderFormSection({
               <div className="sm:col-span-2 flex flex-col gap-1">
                 <label
                   htmlFor="pkgSelect"
-                  className="text-xs sm:text-sm font-bold text-on-surface flex items-center gap-1.5"
+                  className="text-xs sm:text-sm font-extrabold text-on-surface flex items-center gap-1.5"
                 >
                   <Package className="w-4 h-4 text-primary" />
-                  <span>Phiên bản sản phẩm</span>
+                  <span>{ORDER_FORM_CONTENT.fields.productPackage.label}</span>
                 </label>
                 <select
                   id="pkgSelect"
@@ -256,24 +266,24 @@ export default function OrderFormSection({
                     const pkg = PRODUCT_PACKAGES.find((p) => p.id === id);
                     if (pkg) onSelectPackage(pkg);
                   }}
-                  className="w-full h-12 px-3.5 rounded-xl bg-surface-container-lowest text-on-surface text-sm border border-outline-variant/40 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all font-medium"
+                  className="w-full h-12 px-3.5 rounded-xl bg-surface-container-lowest text-on-surface text-sm border border-outline-variant/40 focus:outline-none focus:ring-2 focus:shadow-xs focus:ring-orange-500/50 focus:border-transparent transition-all font-medium"
                 >
                   {PRODUCT_PACKAGES.map((pkg) => (
                     <option key={pkg.id} value={pkg.id}>
-                      {pkg.name} — {formatVND(pkg.price)}
+                      {pkg.name}
                     </option>
                   ))}
                 </select>
               </div>
 
               <div className="flex flex-col gap-1">
-                <span className="text-xs sm:text-sm font-bold text-on-surface">
-                  Số lượng
+                <span className="text-xs sm:text-sm font-extrabold text-on-surface">
+                  {ORDER_FORM_CONTENT.fields.quantity.label}
                 </span>
                 <div className="flex items-center justify-between h-12 px-2.5 rounded-xl bg-surface-container-low border border-outline-variant/40">
                   <button
                     type="button"
-                    aria-label="Giảm"
+                    aria-label={ORDER_FORM_CONTENT.fields.quantity.decreaseAria}
                     onClick={() => onQuantityChange(Math.max(1, quantity - 1))}
                     disabled={quantity <= 1}
                     className="w-7 h-7 rounded-full bg-surface-container-high text-on-surface flex items-center justify-center hover:bg-surface-container-highest active:scale-95 disabled:opacity-40"
@@ -285,7 +295,7 @@ export default function OrderFormSection({
                   </span>
                   <button
                     type="button"
-                    aria-label="Tăng"
+                    aria-label={ORDER_FORM_CONTENT.fields.quantity.increaseAria}
                     onClick={() => onQuantityChange(quantity + 1)}
                     className="w-7 h-7 rounded-full bg-surface-container-high text-on-surface flex items-center justify-center hover:bg-surface-container-highest active:scale-95"
                   >
@@ -296,49 +306,49 @@ export default function OrderFormSection({
             </div>
 
             {/* Notes */}
-            <div className="flex flex-col gap-1">
+            {/* <div className="flex flex-col gap-1">
               <label
                 htmlFor="custNote"
-                className="text-xs sm:text-sm font-bold text-on-surface flex items-center gap-1.5"
+                className="text-xs sm:text-sm font-extrabold text-on-surface flex items-center gap-1.5"
               >
                 <FileText className="w-4 h-4 text-on-surface-variant" />
-                <span>Ghi chú cho xưởng / shipper (tuỳ chọn)</span>
+                <span>{ORDER_FORM_CONTENT.fields.notes.label}</span>
               </label>
               <input
                 id="custNote"
                 type="text"
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-                placeholder="Ví dụ: Giao giờ hành chính, gọi trước 15 phút..."
-                className="w-full h-12 px-3.5 rounded-xl bg-surface-container-lowest text-on-surface placeholder:text-outline/70 text-sm border border-outline-variant/40 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                placeholder={ORDER_FORM_CONTENT.fields.notes.placeholder}
+                className="w-full h-12 px-3.5 rounded-xl bg-surface-container-lowest text-on-surface placeholder:text-outline/70 text-sm border border-outline-variant/40 focus:outline-none focus:ring-2 focus:shadow-xs focus:ring-orange-500/50 focus:border-transparent transition-all"
               />
-            </div>
+            </div> */}
 
             {/* Price Summary Breakdown inside Form */}
             <div className="p-3.5 rounded-xl bg-surface-container-low border border-outline-variant/30 flex flex-col gap-1.5">
               <div className="flex items-center justify-between text-xs text-on-surface-variant">
-                <span>Đơn giá:</span>
+                <span>{ORDER_FORM_CONTENT.priceBreakdown.unitPriceLabel}</span>
                 <span>{formatVND(selectedPackage.price)}</span>
               </div>
               <div className="flex items-center justify-between text-xs text-on-surface-variant">
-                <span>Số lượng:</span>
+                <span>{ORDER_FORM_CONTENT.priceBreakdown.quantityLabel}</span>
                 <span>x{quantity}</span>
               </div>
               <div className="flex items-center justify-between text-xs text-on-surface-variant">
-                <span>Vận chuyển:</span>
+                <span>{ORDER_FORM_CONTENT.priceBreakdown.shippingLabel}</span>
                 <span className="text-secondary font-semibold">
                   {selectedPackage.id === 3 || quantity >= 2
-                    ? "Miễn phí (Freeship)"
-                    : "20.000đ"}
+                    ? ORDER_FORM_CONTENT.priceBreakdown.freeShippingText
+                    : ORDER_FORM_CONTENT.priceBreakdown.shippingFeeText}
                 </span>
               </div>
               <div className="h-[1px] bg-outline-variant/30 my-1" />
               <div className="flex items-center justify-between text-sm sm:text-base font-extrabold text-primary">
-                <span>Tổng tiền thanh toán (COD):</span>
+                <span>{ORDER_FORM_CONTENT.priceBreakdown.totalLabel}</span>
                 <span>
                   {formatVND(
                     totalPrice +
-                      (selectedPackage.id === 3 || quantity >= 2 ? 0 : 20000)
+                      (selectedPackage.id === 3 || quantity >= 2 ? 0 : 20000),
                   )}
                 </span>
               </div>
@@ -348,7 +358,8 @@ export default function OrderFormSection({
             <div className="flex items-start gap-2 p-3 rounded-xl bg-surface-container-low/70 text-on-surface-variant text-xs leading-relaxed">
               <ShieldCheck className="w-4 h-4 text-secondary shrink-0 mt-0.5" />
               <span>
-                <strong>Quyền lợi:</strong> Quý khách được mở hàng kiểm tra độ sáng bóng và khung nan trước khi thanh toán tiền cho nhân viên giao hàng.
+                <strong>{ORDER_FORM_CONTENT.policyReminder.label}</strong>{" "}
+                {ORDER_FORM_CONTENT.policyReminder.text}
               </span>
             </div>
 
@@ -356,17 +367,17 @@ export default function OrderFormSection({
             <button
               type="submit"
               disabled={isSubmitting}
-              className="h-13 sm:h-14 w-full rounded-full bg-primary hover:bg-primary-container text-on-primary font-bold text-base flex items-center justify-center gap-2 shadow-lg active:scale-[0.98] transition-all disabled:opacity-75 disabled:pointer-events-none"
+              className="h-13 sm:h-14 w-full rounded-xl bg-gradient-reverse text-on-primary font-extrabold text-base flex items-center justify-center gap-2 shadow-lg active:scale-[0.98] transition-all disabled:opacity-75 disabled:pointer-events-none"
             >
               {isSubmitting ? (
                 <>
                   <Loader2 className="w-5 h-5 animate-spin" />
-                  <span>Đang xử lý đơn hàng...</span>
+                  <span>{ORDER_FORM_CONTENT.submitButton.loadingText}</span>
                 </>
               ) : (
                 <>
                   <CheckCircle2 className="w-5 h-5" />
-                  <span>XÁC NHẬN ĐẶT HÀNG NGAY</span>
+                  <span>{ORDER_FORM_CONTENT.submitButton.defaultText}</span>
                 </>
               )}
             </button>
@@ -381,7 +392,7 @@ export default function OrderFormSection({
             <button
               onClick={() => setSuccessOrder(null)}
               className="absolute top-4 right-4 p-1 rounded-full text-on-surface-variant hover:bg-surface-container-low"
-              aria-label="Đóng"
+              aria-label={ORDER_FORM_CONTENT.successModal.closeAria}
             >
               <X className="w-5 h-5" />
             </button>
@@ -390,30 +401,37 @@ export default function OrderFormSection({
               <CheckCircle2 className="w-8 h-8" />
             </div>
 
-            <h3 className="text-xl font-bold text-primary">
-              Đặt Hàng Thành Công!
+            <h3 className="text-xl font-extrabold text-primary">
+              {ORDER_FORM_CONTENT.successModal.title}
             </h3>
 
             <p className="text-xs sm:text-sm text-on-surface-variant">
-              Cảm ơn <strong>{successOrder.fullName}</strong>. Xưởng Hoa Khánh đã tiếp nhận thông tin và sẽ liên hệ xác nhận trong vòng{" "}
-              <strong className="text-primary">15 phút</strong>.
+              {ORDER_FORM_CONTENT.successModal.thanksPrefix}{" "}
+              <strong>{successOrder.fullName}</strong>.{" "}
+              {ORDER_FORM_CONTENT.successModal.noticePrefix}{" "}
+              <strong className="text-primary">
+                {ORDER_FORM_CONTENT.successModal.timeSpan}
+              </strong>
+              .
             </p>
 
             <div className="p-3.5 rounded-xl bg-surface-container-low w-full text-left text-xs flex flex-col gap-1.5 text-on-surface border border-outline-variant/20">
               <div>
-                <strong>Mã đơn hàng:</strong>{" "}
-                <span className="font-mono text-primary font-bold">
+                <strong>
+                  {ORDER_FORM_CONTENT.successModal.orderCodeLabel}
+                </strong>{" "}
+                <span className="font-mono text-primary font-extrabold">
                   {successOrder.orderCode}
                 </span>
               </div>
               <div>
-                <strong>Sản phẩm:</strong>{" "}
+                <strong>{ORDER_FORM_CONTENT.successModal.productLabel}</strong>{" "}
                 <span>
                   {successOrder.packageName} (x{successOrder.quantity})
                 </span>
               </div>
               <div>
-                <strong>Thanh toán khi nhận:</strong>{" "}
+                <strong>{ORDER_FORM_CONTENT.successModal.paymentLabel}</strong>{" "}
                 <span className="text-primary font-extrabold text-sm">
                   {formatVND(successOrder.totalPrice)}
                 </span>
@@ -423,9 +441,9 @@ export default function OrderFormSection({
             <button
               type="button"
               onClick={() => setSuccessOrder(null)}
-              className="w-full h-11 rounded-full bg-primary text-on-primary font-bold text-sm mt-2 shadow-sm hover:bg-primary-container active:scale-95 transition-all"
+              className="w-full h-11 rounded-full bg-primary text-on-primary font-extrabold text-sm mt-2 shadow-sm hover:bg-primary-container active:scale-95 transition-all"
             >
-              Đóng thông báo
+              {ORDER_FORM_CONTENT.successModal.closeButton}
             </button>
           </div>
         </div>

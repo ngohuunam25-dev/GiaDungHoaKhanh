@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { API_ORDER_MESSAGES } from "@/content/siteContent";
 
 export interface OrderPayload {
   fullName: string;
@@ -20,7 +21,7 @@ export async function POST(request: Request) {
     // 1. Server-side validation
     if (!body.fullName || body.fullName.trim().length < 2) {
       return NextResponse.json(
-        { success: false, error: "Vui lòng nhập họ tên người nhận hợp lệ." },
+        { success: false, error: API_ORDER_MESSAGES.validation.fullNameRequired },
         { status: 400 }
       );
     }
@@ -31,7 +32,7 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           success: false,
-          error: "Số điện thoại không đúng định dạng di động Việt Nam (10 chữ số).",
+          error: API_ORDER_MESSAGES.validation.phoneInvalid,
         },
         { status: 400 }
       );
@@ -39,14 +40,14 @@ export async function POST(request: Request) {
 
     if (!body.address || body.address.trim().length < 5) {
       return NextResponse.json(
-        { success: false, error: "Vui lòng cung cấp địa chỉ nhận hàng chi tiết." },
+        { success: false, error: API_ORDER_MESSAGES.validation.addressRequired },
         { status: 400 }
       );
     }
 
     if (!body.quantity || body.quantity < 1) {
       return NextResponse.json(
-        { success: false, error: "Số lượng đặt hàng không hợp lệ." },
+        { success: false, error: API_ORDER_MESSAGES.validation.quantityInvalid },
         { status: 400 }
       );
     }
@@ -92,9 +93,9 @@ export async function POST(request: Request) {
     return NextResponse.json({
       success: true,
       orderCode,
-      message: "Đơn hàng đã được ghi nhận thành công tại cổng tiếp nhận xưởng Hoa Khánh.",
+      message: API_ORDER_MESSAGES.success.message,
       isSimulated: true,
-      integrationNote: "Dữ liệu đơn hàng đã chuyển qua boundary API; sẵn sàng kết nối webhook CRM/Google Sheets.",
+      integrationNote: API_ORDER_MESSAGES.success.integrationNote,
       orderSummary: {
         orderCode,
         fullName: body.fullName.trim(),
@@ -106,7 +107,7 @@ export async function POST(request: Request) {
   } catch (error: unknown) {
     console.error("[Order API Error]", error);
     return NextResponse.json(
-      { success: false, error: "Có lỗi xảy ra trong quá trình xử lý đơn hàng. Vui lòng thử lại sau." },
+      { success: false, error: API_ORDER_MESSAGES.error.serverError },
       { status: 500 }
     );
   }

@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import Script from "next/script";
 import { trackPageView, trackViewContent } from "@/lib/analytics/tiktok";
+import { ANALYTICS_CONTENT } from "@/content/siteContent";
 
 export default function AnalyticsProvider() {
   const pixelId = process.env.NEXT_PUBLIC_TIKTOK_PIXEL_ID;
@@ -12,12 +13,7 @@ export default function AnalyticsProvider() {
     trackPageView();
 
     // Initial ViewContent for the primary product
-    trackViewContent({
-      id: "long-ban-inox-hoa-khanh",
-      name: "Lồng Bàn Inox Hoa Khánh 304",
-      price: 145000,
-      category: "Gia dụng nhà bếp",
-    });
+    trackViewContent(ANALYTICS_CONTENT.primaryProduct);
   }, []);
 
   if (!pixelId) {

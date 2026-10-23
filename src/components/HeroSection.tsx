@@ -1,58 +1,21 @@
 "use client";
 
-import React, { useState, useRef, useEffect, useCallback } from "react";
-import Image from "next/image";
+import { GalleryItem, HERO_CONTENT } from "@/content/siteContent";
+import { trackClickCTA } from "@/lib/analytics/tiktok";
 import {
-  ShieldCheck,
+  BugOff,
   ChevronLeft,
   ChevronRight,
-  Sparkles,
-  BugOff,
   PackageCheck,
-  ArrowRight,
   PlayCircle,
+  Sparkles,
 } from "lucide-react";
-import { trackClickCTA } from "@/lib/analytics/tiktok";
+import Image from "next/image";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
-export interface GalleryItem {
-  id: number;
-  src: string;
-  alt: string;
-  label: string;
-}
-
-const GALLERY_IMAGES: GalleryItem[] = [
-  {
-    id: 1,
-    src: "/images/gallery-1.jpg",
-    alt: "Lồng bàn inox 304 Hoa Khánh toàn cảnh",
-    label: "Toàn cảnh",
-  },
-  {
-    id: 2,
-    src: "/images/gallery-2.jpg",
-    alt: "Góc nghiêng vòm lưới inox thông thoáng",
-    label: "Vòm lưới",
-  },
-  {
-    id: 3,
-    src: "/images/gallery-3.jpg",
-    alt: "Mặt úp nan tròn cứng cáp và khuyên treo tường",
-    label: "Nan & Khuyên treo",
-  },
-  {
-    id: 4,
-    src: "/images/gallery-4.jpg",
-    alt: "Tem logo dập nổi chính hãng Hoa Khánh và mắt lưới khít",
-    label: "Tem & Mắt lưới",
-  },
-  {
-    id: 5,
-    src: "/images/gallery-5.jpg",
-    alt: "Núm cầm inox nguyên khối bo tròn đầm tay",
-    label: "Núm cầm",
-  },
-];
+export type { GalleryItem };
+const GALLERY_IMAGES = HERO_CONTENT.galleryImages;
+const TRUST_ICONS = [Sparkles, BugOff, PackageCheck];
 
 export default function HeroSection() {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -106,27 +69,65 @@ export default function HeroSection() {
   }, [nextSlide, prevSlide]);
 
   return (
-    <section className="flex flex-col px-4 pt-3 pb-8 gap-4 max-w-4xl mx-auto w-full">
+    <section className="flex flex-col pb-8 gap-4 max-w-4xl mx-auto w-full">
       {/* Brand Pill / Micro Badge */}
-      <div className="inline-flex items-center gap-1.5 self-start px-3 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed shadow-xs">
-        <ShieldCheck className="w-4 h-4 text-secondary shrink-0" />
-        <span className="text-xs font-semibold tracking-wide">
-          Inox 304 Chuẩn Xưởng Hoa Khánh
-        </span>
+      <div className="w-full flex items-center justify-between pb-3.5 shadow-xs">
+        <div className="flex items-center gap-3 px-4">
+          {/* Logo HK màu cam */}
+          {/* <div className="w-11 h-11 bg-[#ea580c] rounded-xl flex items-center justify-center shrink-0 shadow-sm">
+            <span className="text-white font-extrabold text-xl tracking-tight italic select-none">
+              HK
+            </span>
+          </div> */}
+
+          <div className="flex flex-col">
+            <h1 className="text-primary font-extrabold text-base md:text-lg leading-tight tracking-wide uppercase">
+              {HERO_CONTENT.brandBar.shopName}
+            </h1>
+            <div className="flex items-center gap-1.5 mt-0.5">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block shrink-0"></span>
+              <span className="text-emerald-600 text-xs font-semibold tracking-tight">
+                {HERO_CONTENT.brandBar.authenticBadge}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex flex-col items-end justify-center gap-0.5 px-4">
+          <div className="flex items-center gap-1 text-xs">
+            <span className="text-amber-500 font-bold text-sm">★</span>
+            <span className="font-bold text-amber-500">{HERO_CONTENT.brandBar.ratingScore}</span>
+            <span className="text-slate-400 font-medium text-[11px]">
+              {HERO_CONTENT.brandBar.ratingCount}
+            </span>
+          </div>
+
+          <div className="flex items-center gap-1">
+            <svg
+              className="w-3.5 h-3.5 text-pink-600 fill-current"
+              viewBox="0 0 24 24"
+            >
+              <path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2a1 1 0 011.02-.24c1.12.37 2.33.57 3.57.57a1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.45.57 3.57a1 1 0 01-.25 1.02l-2.2 2.2z" />
+            </svg>
+            <span className="text-[#1e293b] font-bold text-xs tracking-tight">
+              {HERO_CONTENT.brandBar.supportLabel}
+            </span>
+          </div>
+        </div>
       </div>
 
       {/* Main Headline & Subtitle */}
-      <div className="flex flex-col gap-1.5">
-        <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-primary tracking-tight leading-tight">
-          Che Đậy Thức Ăn Gọn Gàng, Tiện Lợi Cho Bữa Cơm Gia Đình
+      <div className="flex flex-col gap-1.5 px-4">
+        <h1 className="text-xl sm:text-3xl md:text-4xl font-extrabold text-primary tracking-tight leading-tight">
+          {HERO_CONTENT.title}
         </h1>
-        <p className="text-sm sm:text-base text-on-surface-variant leading-relaxed">
-          Lồng bàn inox với thiết kế dạng lưới vi sợi thông thoáng, bảo vệ món ăn chu đáo khỏi côn trùng và bụi bẩn.
+        <p className="text-sm sm:text-base text-on-surface-variant tracking-wide leading-relaxed">
+          {HERO_CONTENT.subtitle}
         </p>
       </div>
 
       {/* Interactive Mobile & Desktop Gallery */}
-      <div className="flex flex-col gap-2.5">
+      <div className="flex flex-col gap-2.5 px-4">
         {/* Main Slide Card */}
         <div
           className="relative w-full aspect-square max-h-[460px] rounded-2xl bg-surface-container-lowest overflow-hidden shadow-sm border border-outline-variant/30 flex items-center justify-center select-none"
@@ -154,7 +155,7 @@ export default function HeroSection() {
           {/* Left / Right Quick Taps */}
           <button
             type="button"
-            aria-label="Hình trước"
+            aria-label={HERO_CONTENT.navigationAria.prevSlide}
             onClick={prevSlide}
             className="absolute left-2.5 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-surface-container-lowest/90 text-on-surface shadow-md flex items-center justify-center hover:bg-surface-container-lowest active:scale-90 transition-transform border border-outline-variant/30"
           >
@@ -162,7 +163,7 @@ export default function HeroSection() {
           </button>
           <button
             type="button"
-            aria-label="Hình kế tiếp"
+            aria-label={HERO_CONTENT.navigationAria.nextSlide}
             onClick={nextSlide}
             className="absolute right-2.5 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-surface-container-lowest/90 text-on-surface shadow-md flex items-center justify-center hover:bg-surface-container-lowest active:scale-90 transition-transform border border-outline-variant/30"
           >
@@ -181,10 +182,10 @@ export default function HeroSection() {
                 onClick={() => setActiveIndex(idx)}
                 className={`relative aspect-square rounded-xl bg-surface-container-lowest overflow-hidden shadow-xs p-1 transition-all ${
                   isSelected
-                    ? "ring-2 ring-primary ring-offset-1 scale-[1.02] shadow-sm"
+                    ? "ring-2 ring-[#F97316] ring-offset-1 scale-[1.02] shadow-sm"
                     : "opacity-70 hover:opacity-100 hover:border-primary/40 border border-outline-variant/20"
                 }`}
-                aria-label={`Xem ảnh ${idx + 1}: ${img.label}`}
+                aria-label={`${HERO_CONTENT.navigationAria.viewSlidePrefix} ${idx + 1}: ${img.label}`}
               >
                 <div className="relative w-full h-full">
                   <Image
@@ -202,56 +203,65 @@ export default function HeroSection() {
       </div>
 
       {/* Authentic Trust Micro-Badges */}
-      <div className="grid grid-cols-3 gap-2 pt-1">
-        <div className="flex flex-col items-center text-center p-2.5 sm:p-3 rounded-xl bg-surface-container-lowest shadow-xs border border-outline-variant/20 gap-1">
-          <div className="w-8 h-8 rounded-full bg-primary-fixed flex items-center justify-center text-primary">
-            <Sparkles className="w-4 h-4" />
-          </div>
-          <span className="text-xs sm:text-sm font-bold text-on-surface">Inox 304</span>
-          <span className="text-[10px] sm:text-xs text-on-surface-variant leading-tight">
-            Sáng bóng trọn đời
-          </span>
-        </div>
-
-        <div className="flex flex-col items-center text-center p-2.5 sm:p-3 rounded-xl bg-surface-container-lowest shadow-xs border border-outline-variant/20 gap-1">
-          <div className="w-8 h-8 rounded-full bg-secondary-fixed flex items-center justify-center text-secondary">
-            <BugOff className="w-4 h-4" />
-          </div>
-          <span className="text-xs sm:text-sm font-bold text-on-surface">Lưới Siêu Khít</span>
-          <span className="text-[10px] sm:text-xs text-on-surface-variant leading-tight">
-            Chặn côn trùng 100%
-          </span>
-        </div>
-
-        <div className="flex flex-col items-center text-center p-2.5 sm:p-3 rounded-xl bg-surface-container-lowest shadow-xs border border-outline-variant/20 gap-1">
-          <div className="w-8 h-8 rounded-full bg-primary-fixed flex items-center justify-center text-primary">
-            <PackageCheck className="w-4 h-4" />
-          </div>
-          <span className="text-xs sm:text-sm font-bold text-on-surface">Xem Hàng Trước</span>
-          <span className="text-[10px] sm:text-xs text-on-surface-variant leading-tight">
-            Thanh toán tận nhà
-          </span>
-        </div>
-      </div>
+      {/* <div className="grid grid-cols-3 gap-2 pt-1 px-4">
+        {HERO_CONTENT.trustBadges.map((badge, idx) => {
+          const Icon = TRUST_ICONS[idx] || Sparkles;
+          const isSecondary = idx === 1;
+          return (
+            <div
+              key={idx}
+              className="flex flex-col items-center text-center p-2.5 sm:p-3 rounded-xl bg-surface-container-lowest shadow-xs border border-outline-variant/20 gap-1"
+            >
+              <div
+                className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                  isSecondary
+                    ? "bg-secondary-fixed text-secondary"
+                    : "bg-primary-fixed text-primary"
+                }`}
+              >
+                <Icon className="w-4 h-4" />
+              </div>
+              <span className="text-xs sm:text-sm font-bold text-on-surface">
+                {badge.title}
+              </span>
+              <span className="text-[10px] sm:text-xs text-on-surface-variant leading-tight">
+                {badge.subtitle}
+              </span>
+            </div>
+          );
+        })}
+      </div> */}
 
       {/* Hero CTA Buttons */}
-      <div className="flex flex-col sm:flex-row gap-2.5 pt-1">
+      <div className="flex flex-col sm:flex-row gap-2.5 pt-1 px-4">
         <a
-          href="#order-form"
-          onClick={() => trackClickCTA("Hero - Đặt Mua Ngay", "#order-form")}
-          className="h-12 sm:h-13 w-full rounded-full bg-primary hover:bg-primary-container text-on-primary font-bold text-base flex items-center justify-center gap-2 shadow-md transition-all active:scale-[0.98]"
+          href={HERO_CONTENT.ctaButtons.orderTargetId}
+          onClick={() =>
+            trackClickCTA(
+              HERO_CONTENT.ctaButtons.orderTrackLabel,
+              HERO_CONTENT.ctaButtons.orderTargetId,
+            )
+          }
+          className="h-12 sm:h-13 w-full rounded-lg bg-gradient-reverse text-on-primary font-bold text-base flex items-center justify-center gap-2 shadow-md transition-all active:scale-[0.98]"
         >
-          <span>ĐẶT MUA NGAY</span>
-          <ArrowRight className="w-5 h-5" />
+          <span className="rotate-90 animate-bounce">
+            <span className="-rotate-90 inline-block">👉</span>
+          </span>
+          <span>{HERO_CONTENT.ctaButtons.orderNow}</span>
         </a>
 
         <a
-          href="#demo-section"
-          onClick={() => trackClickCTA("Hero - Xem Chi Tiết Thực Tế", "#demo-section")}
-          className="h-11 sm:h-13 w-full rounded-full bg-surface-container-lowest text-primary font-semibold text-sm sm:text-base flex items-center justify-center gap-2 shadow-xs border border-primary/20 hover:bg-surface-container-low transition-all active:scale-[0.98]"
+          href={HERO_CONTENT.ctaButtons.demoTargetId}
+          onClick={() =>
+            trackClickCTA(
+              HERO_CONTENT.ctaButtons.demoTrackLabel,
+              HERO_CONTENT.ctaButtons.demoTargetId,
+            )
+          }
+          className="h-11 sm:h-13 w-full rounded-lg bg-surface-container-lowest text-primary font-semibold text-sm sm:text-base flex items-center justify-center gap-2 shadow-xs border border-primary/20 hover:bg-surface-container-low transition-all active:scale-[0.98]"
         >
           <PlayCircle className="w-5 h-5 text-secondary" />
-          <span>Xem chi tiết & thử nghiệm thực tế</span>
+          <span>{HERO_CONTENT.ctaButtons.demoDetails}</span>
         </a>
       </div>
     </section>

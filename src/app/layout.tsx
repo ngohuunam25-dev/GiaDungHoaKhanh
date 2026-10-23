@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Be_Vietnam_Pro } from "next/font/google";
 import "./globals.css";
 import AnalyticsProvider from "@/components/AnalyticsProvider";
+import { SITE_META } from "@/content/siteContent";
 
 const beVietnamPro = Be_Vietnam_Pro({
   weight: ["400", "500", "600", "700", "800"],
@@ -11,26 +12,17 @@ const beVietnamPro = Be_Vietnam_Pro({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://giadunghoakhanh.vn"),
-  title: "Lồng Bàn Inox Hoa Khánh - Che Đậy Thức Ăn Tiện Lợi & Bảo Vệ Bữa Cơm Gia Đình",
-  description:
-    "Lồng bàn Inox 304 chuẩn xưởng Hoa Khánh. Thiết kế mắt lưới vi sợi khít chặn 100% ruồi muỗi côn trùng, thoáng khí không đọng sương, sáng bóng trọn đời, đồng kiểm tận nơi.",
-  keywords: [
-    "lồng bàn inox",
-    "lồng bàn inox 304",
-    "lồng bàn hoa khánh",
-    "đậy thức ăn inox",
-    "chống ruồi muỗi",
-    "lồng bàn đậy mâm cơm",
-  ],
-  authors: [{ name: "Xưởng Inox Hoa Khánh" }],
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || SITE_META.defaultUrl),
+  title: SITE_META.title,
+  description: SITE_META.description,
+  keywords: SITE_META.keywords,
+  authors: [{ name: SITE_META.authorName }],
   openGraph: {
-    title: "Lồng Bàn Inox 304 Hoa Khánh - Giữ Trọn Vị Ngon Bữa Cơm",
-    description:
-      "Chất liệu Inox SUS 304 không gỉ, đậy kín sạch sẽ, vệ sinh nhanh chóng trong 15 giây. Giao hàng toàn quốc, kiểm tra trước khi trả tiền.",
-    images: ["/images/gallery-1.jpg"],
+    title: SITE_META.openGraph.title,
+    description: SITE_META.openGraph.description,
+    images: [SITE_META.openGraph.image],
     type: "website",
-    locale: "vi_VN",
+    locale: SITE_META.openGraph.locale,
   },
 };
 

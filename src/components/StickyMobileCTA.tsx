@@ -1,11 +1,10 @@
 "use client";
 
-import React from "react";
-import Image from "next/image";
-import { ArrowRight, Truck } from "lucide-react";
-import { ProductPackage } from "./PricingSection";
-import { formatVND } from "@/lib/utils";
+import { ProductPackage, STICKY_CTA_CONTENT } from "@/content/siteContent";
 import { trackClickCTA } from "@/lib/analytics/tiktok";
+import { formatVND } from "@/lib/utils";
+import { Truck } from "lucide-react";
+import Image from "next/image";
 
 interface StickyMobileCTAProps {
   selectedPackage: ProductPackage;
@@ -25,8 +24,8 @@ export default function StickyMobileCTA({
         <div className="flex items-center gap-2.5 min-w-0">
           <div className="relative w-11 h-11 rounded-xl overflow-hidden bg-surface-container shrink-0 border border-outline-variant/30 p-0.5">
             <Image
-              src="/images/gallery-1.jpg"
-              alt="Thumbnail lồng bàn inox"
+              src={STICKY_CTA_CONTENT.thumbnailSrc}
+              alt={STICKY_CTA_CONTENT.thumbnailAlt}
               fill
               sizes="44px"
               className="object-contain"
@@ -49,19 +48,23 @@ export default function StickyMobileCTA({
             </div>
             <span className="text-[10px] text-secondary font-medium flex items-center gap-1 leading-none mt-0.5">
               <Truck className="w-2.5 h-2.5 shrink-0" />
-              <span>Đồng kiểm khi nhận</span>
+              <span>{STICKY_CTA_CONTENT.inspectOnDelivery}</span>
             </span>
           </div>
         </div>
 
         {/* Right CTA Button */}
         <a
-          href="#order-form"
-          onClick={() => trackClickCTA("Sticky Mobile - Đặt Mua Ngay", "#order-form")}
-          className="h-11 sm:h-12 px-5 sm:px-8 rounded-full bg-primary hover:bg-primary-container text-on-primary font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 shrink-0 shadow-md active:scale-95 transition-all"
+          href={STICKY_CTA_CONTENT.targetId}
+          onClick={() =>
+            trackClickCTA(
+              STICKY_CTA_CONTENT.trackLabel,
+              STICKY_CTA_CONTENT.targetId,
+            )
+          }
+          className="h-11 sm:h-12 px-5 sm:px-8 rounded-lg bg-tiktok-gradient animate-pulse-glow hover:animate-none text-on-primary font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 shrink-0 shadow-md active:scale-95 transition-all"
         >
-          <span>ĐẶT MUA NGAY</span>
-          <ArrowRight className="w-4 h-4" />
+          <span>{STICKY_CTA_CONTENT.buttonText}</span>
         </a>
       </div>
     </aside>
