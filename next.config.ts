@@ -1,8 +1,12 @@
 import type { NextConfig } from "next";
-
+const repo = "GiaDungHoaKhanh";
+const isProd = process.env.NODE_ENV === "production";
 const nextConfig: NextConfig = {
   /* config options here */
   output: "export",
+  basePath: isProd ? `/${repo}` : "",
+  assetPrefix: isProd ? `/${repo}/` : "",
+  trailingSlash: true,
   images: {
     unoptimized: true,
   },
@@ -13,6 +17,9 @@ const nextConfig: NextConfig = {
         as: "*.css",
       },
     },
+  },
+  env: {
+    NEXT_PUBLIC_BASE_PATH: isProd ? `/${repo}` : "",
   },
 };
 
