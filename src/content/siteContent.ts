@@ -198,14 +198,14 @@ export const PRODUCT_DEMO_CONTENT = {
       title: "Núm & Quai Cầm Nguyên Khối",
       description:
         "Gia công bo tròn tinh xảo từ thanh Inox đặc, nhấc đậy đầm tay, không sắc cạnh, tiện dụng và an toàn tuyệt đối cho người lớn tuổi.",
-      imageSrc: "/images/gallery-5.jpg",
+      imageSrc: "/images/gallery-4.jpg",
       imageAlt: "Quai cầm và núm inox nguyên khối",
     },
     {
       title: "Tem Dập Nổi Hoa Khánh Chính Hãng",
       description:
         "Dấu ấn độc quyền xưởng sản xuất Hoa Khánh cùng mắt lưới vi sợi đan xen khít khao, ngăn chặn 100% ruồi muỗi và cả kiến gió.",
-      imageSrc: "/images/gallery-4.jpg",
+      imageSrc: "/images/gallery-2.jpg",
       imageAlt: "Tem dập nổi và mắt lưới vi sợi",
     },
     {

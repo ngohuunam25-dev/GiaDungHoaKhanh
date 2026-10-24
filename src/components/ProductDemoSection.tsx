@@ -2,10 +2,11 @@
 
 import { DetailFeature, PRODUCT_DEMO_CONTENT } from "@/content/siteContent";
 import { getAllVideoUrls } from "@/content/videos";
+import useElementOnScreen from "@/hooks/useElementOnScreen";
 import { cn } from "@/lib/utils";
 import { CheckCircle2, Play, Volume2, VolumeX } from "lucide-react";
 import Image from "next/image";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export type { DetailFeature };
 const DETAIL_FEATURES = PRODUCT_DEMO_CONTENT.features;
@@ -14,9 +15,13 @@ const VIDEOS = getAllVideoUrls();
 export default function ProductDemoSection() {
   const [activeVideoIdx, setActiveVideoIdx] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
   const videoRef = useRef<HTMLVideoElement | null>(null);
-
+  const [containerRef, isVisible] = useElementOnScreen({
+    root: null,
+    rootMargin: "10px",
+    threshold: 0.2,
+  });
   const activeVideo = VIDEOS[activeVideoIdx];
 
   const togglePlay = () => {
@@ -40,18 +45,44 @@ export default function ProductDemoSection() {
   const switchVideo = (idx: number) => {
     if (idx === activeVideoIdx) return;
     // Pause current video before switching
-    if (videoRef.current) {
-      videoRef.current.pause();
+    setTimeout(() => {
+      if (videoRef.current) {
+        videoRef.current.currentTime = 0;
+        videoRef.current
+          .play()
+          .then(() => {
+            setIsPlaying(true);
+          })
+          .catch((error) => {
+            console.log("Autoplay bị trình duyệt chặn khi switch:", error);
+            setIsPlaying(false);
+          });
+      }
+    }, 50);
 
-      //scroll video
+    if (videoRef.current) {
       videoRef.current.scrollIntoView({
         behavior: "smooth",
         block: "center",
       });
     }
     setActiveVideoIdx(idx);
-    setIsPlaying(false);
   };
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (isVisible) {
+        videoRef.current?.play();
+        setIsPlaying(true);
+      } else {
+        videoRef.current?.pause();
+        setIsPlaying(false);
+      }
+    }, 0);
+  }, [isVisible]);
+
+  console.log("videoRef.current", { videoRef });
+  console.log("isVisible", isVisible);
 
   return (
     <section
@@ -102,7 +133,10 @@ export default function ProductDemoSection() {
             })}
           </div>
         )}
-        <div className="relative w-full aspect-[4/5] sm:aspect-[16/9] rounded-lg overflow-hidden bg-surface-container shadow-md border border-outline-variant/30 group">
+        <div
+          ref={containerRef as React.RefObject<HTMLDivElement>}
+          className="relative w-full aspect-[4/5] sm:aspect-[16/9] rounded-lg overflow-hidden bg-surface-container shadow-md border border-outline-variant/30 group"
+        >
           {/* Actual Video Element */}
           <video
             ref={videoRef}
@@ -178,7 +212,7 @@ export default function ProductDemoSection() {
         </div>
 
         {/* 4 Detailed Feature Zoom Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
           {DETAIL_FEATURES.map((item, idx) => (
             <div
               key={idx}
