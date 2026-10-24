@@ -70,19 +70,20 @@ export default function ProductDemoSection() {
   };
 
   useEffect(() => {
-    setTimeout(() => {
-      if (isVisible) {
-        videoRef.current?.play();
-        setIsPlaying(true);
-      } else {
-        videoRef.current?.pause();
-        setIsPlaying(false);
-      }
-    }, 0);
+    if (isVisible && videoRef.current) {
+      videoRef.current
+        .play()
+        .then(() => {
+          setIsPlaying(true);
+        })
+        .catch((error) => {
+          console.log("Autoplay bị trình duyệt chặn khi scroll:", error);
+        });
+    } else if (!isVisible && videoRef.current) {
+      videoRef.current.pause();
+      setIsPlaying(false);
+    }
   }, [isVisible]);
-
-  console.log("videoRef.current", { videoRef });
-  console.log("isVisible", isVisible);
 
   return (
     <section
