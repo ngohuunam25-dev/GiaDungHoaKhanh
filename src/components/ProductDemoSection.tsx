@@ -45,22 +45,18 @@ export default function ProductDemoSection() {
   const switchVideo = (idx: number) => {
     if (idx === activeVideoIdx) return;
     // Pause current video before switching
-    setTimeout(() => {
-      if (videoRef.current) {
-        videoRef.current.currentTime = 0;
-        videoRef.current
-          .play()
-          .then(() => {
-            setIsPlaying(true);
-          })
-          .catch((error) => {
-            console.log("Autoplay bị trình duyệt chặn khi switch:", error);
-            setIsPlaying(false);
-          });
-      }
-    }, 50);
-
     if (videoRef.current) {
+      setTimeout(() => {
+        if (videoRef.current?.paused) {
+          videoRef.current?.play();
+          setIsPlaying(true);
+        } else {
+          videoRef.current?.pause();
+          setIsPlaying(false);
+        }
+      }, 0);
+
+      //scroll video
       videoRef.current.scrollIntoView({
         behavior: "smooth",
         block: "center",
@@ -70,20 +66,16 @@ export default function ProductDemoSection() {
   };
 
   useEffect(() => {
-    if (isVisible && videoRef.current) {
-      videoRef.current
-        .play()
-        .then(() => {
-          setIsPlaying(true);
-        })
-        .catch((error) => {
-          console.log("Autoplay bị trình duyệt chặn khi scroll:", error);
-        });
-    } else if (!isVisible && videoRef.current) {
-      videoRef.current.pause();
-      setIsPlaying(false);
-    }
-  }, [isVisible]);
+    setTimeout(() => {
+      if (isVisible && videoRef.current) {
+        videoRef.current?.play();
+        setIsPlaying(true);
+      } else if (!isVisible && videoRef.current) {
+        videoRef.current?.pause();
+        setIsPlaying(false);
+      }
+    }, 0);
+  }, [isVisible, videoRef?.current]);
 
   return (
     <section
