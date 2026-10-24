@@ -29,5 +29,8 @@
     "tailwindcss": "^4",
     "typescript": "^5",
     "wrangler": "^4.152.0"
-  }
+  },
+  "browserslist": [
+    "defaults and not IE 11"
+  ]
 }

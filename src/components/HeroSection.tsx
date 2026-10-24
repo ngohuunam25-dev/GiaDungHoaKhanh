@@ -96,7 +96,9 @@ export default function HeroSection() {
         <div className="flex flex-col items-end justify-center gap-0.5 px-4">
           <div className="flex items-center gap-1 text-xs">
             <span className="text-amber-500 font-bold text-sm">★</span>
-            <span className="font-bold text-amber-500">{HERO_CONTENT.brandBar.ratingScore}</span>
+            <span className="font-bold text-amber-500">
+              {HERO_CONTENT.brandBar.ratingScore}
+            </span>
             <span className="text-slate-400 font-medium text-[11px]">
               {HERO_CONTENT.brandBar.ratingCount}
             </span>
@@ -194,6 +196,7 @@ export default function HeroSection() {
                     fill
                     sizes="80px"
                     className="object-contain"
+                    priority
                   />
                 </div>
               </button>
@@ -244,9 +247,6 @@ export default function HeroSection() {
           }
           className="h-12 sm:h-13 w-full rounded-lg bg-gradient-reverse text-on-primary font-bold text-base flex items-center justify-center gap-2 shadow-md transition-all active:scale-[0.98]"
         >
-          <span className="rotate-90 animate-bounce">
-            <span className="-rotate-90 inline-block">👉</span>
-          </span>
           <span>{HERO_CONTENT.ctaButtons.orderNow}</span>
         </a>
 

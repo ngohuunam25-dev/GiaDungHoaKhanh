@@ -27,13 +27,13 @@ export const PRODUCT_VIDEOS: VideoItem[] = [
   {
     id: "case-study",
     path: "/videos/vd_caseStudy.MOV",
-    label: "Case Study sản phẩm",
+    label: "Đa dụng & Sáng tạo",
     description: "Video case study thực tế lồng bàn Inox Hoa Khánh",
   },
   {
     id: "group-longban-1",
     path: "/videos/vd_group_longban.MOV",
-    label: "Bộ sưu tập lồng bàn",
+    label: "Lồng Bàn Inox Cao Cấp",
     description: "Video trưng bày nhóm sản phẩm lồng bàn Inox đa kích thước",
   },
   // {
@@ -45,7 +45,7 @@ export const PRODUCT_VIDEOS: VideoItem[] = [
   {
     id: "longban-dai",
     path: "/videos/vd_longban_dai.MOV",
-    label: "Lồng bàn dài",
+    label: "Lồng bàn size lớn",
     description: "Video trải nghiệm lồng bàn Inox size đại Hoa Khánh",
   },
 ];
