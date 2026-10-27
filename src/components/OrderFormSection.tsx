@@ -1,19 +1,15 @@
 "use client";
 
-import {
-  ORDER_FORM_CONTENT,
-  PRODUCT_PACKAGES,
-  ProductPackage,
-} from "@/content/siteContent";
-import { generateEventId, trackLeadSubmission } from "@/lib/analytics/tiktok";
+import { ORDER_FORM_CONTENT } from "@/content/siteContent";
 import { formatVND } from "@/lib/utils";
+import { type Package, type Product } from "@/types/landingPage.type";
 import {
   AlertCircle,
   CheckCircle2,
   Loader2,
   MapPin,
   Minus,
-  Package,
+  Package as PackgeIcon,
   Phone,
   Plus,
   ShieldCheck,
@@ -21,19 +17,22 @@ import {
   User,
   X,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
 interface OrderFormSectionProps {
-  selectedPackage: ProductPackage;
-  onSelectPackage: (pkg: ProductPackage) => void;
+  onSelectPackage: (pkg: Package<Product> | undefined) => void;
   quantity: number;
   onQuantityChange: (qty: number) => void;
+  selectedPackage: Package<Product> | undefined;
+  packages: Package<Product>[] | undefined;
 }
 
 export default function OrderFormSection({
   selectedPackage,
   onSelectPackage,
   quantity,
+  packages,
   onQuantityChange,
 }: OrderFormSectionProps) {
   // Form input states
@@ -53,8 +52,8 @@ export default function OrderFormSection({
     totalPrice: number;
   } | null>(null);
 
-  const totalPrice = selectedPackage.price * quantity;
-
+  const totalPrice = selectedPackage?.price ?? 0 * quantity;
+  const router = useRouter();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (isSubmitting) return; // Prevent duplicate clicks
@@ -83,49 +82,67 @@ export default function OrderFormSection({
 
     try {
       // Generate unique event ID for TikTok deduplication
-      const eventId = generateEventId("lead");
+      // const eventId = generateEventId("lead");
 
-      const response = await fetch("/api/order", {
+      // const response = await fetch("/api/order", {
+      //   method: "POST",
+      //   headers: { "Content-Type": "application/json" },
+      //   body: JSON.stringify({
+      //     fullName: fullName.trim(),
+      //     phone: cleanPhone,
+      //     address: address.trim(),
+      //     packageId: selectedPackage?.id,
+      //     packageName: selectedPackage?.name,
+      //     quantity,
+      //     pricePerUnit: selectedPackage?.price,
+      //     totalPrice,
+      //     notes: notes.trim() || undefined,
+      //     eventId,
+      //   }),
+      // });
+
+      // const data = await response.json();
+
+      // if (!response.ok || !data.success) {
+      //   throw new Error(
+      //     data.error || ORDER_FORM_CONTENT.validation.submitFailed,
+      //   );
+      // }
+
+      // // Track TikTok Lead (no PII sent)
+      // trackLeadSubmission(
+      //   {
+      //     packageId: selectedPackage?.id.toString() ?? "",
+      //     packageName: selectedPackage?.name ?? "",
+      //     totalAmount: totalPrice,
+      //     quantity,
+      //   },
+      //   eventId,
+      // );
+
+      // send to google sheet
+      const res = await fetch("/api/tracking", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          fullName: fullName.trim(),
+          name: fullName.trim(),
           phone: cleanPhone,
           address: address.trim(),
-          packageId: selectedPackage.id,
-          packageName: selectedPackage.name,
+          packageId: selectedPackage?.id,
+          packageName: selectedPackage?.name,
           quantity,
-          pricePerUnit: selectedPackage.price,
+          pricePerUnit: selectedPackage?.price,
           totalPrice,
-          notes: notes.trim() || undefined,
-          eventId,
+          note: notes.trim() || undefined,
         }),
       });
-
-      const data = await response.json();
-
-      if (!response.ok || !data.success) {
-        throw new Error(
-          data.error || ORDER_FORM_CONTENT.validation.submitFailed,
-        );
-      }
-
-      // Track TikTok Lead (no PII sent)
-      trackLeadSubmission(
-        {
-          packageId: selectedPackage.id.toString(),
-          packageName: selectedPackage.name,
-          totalAmount: totalPrice,
-          quantity,
-        },
-        eventId,
-      );
-
+      const data = await res.json();
+      if (!data.ok) throw new Error(data.error);
       // Show success modal
       setSuccessOrder({
         orderCode: data.orderCode || `HK-${Date.now().toString().slice(-6)}`,
         fullName: fullName.trim(),
-        packageName: selectedPackage.name,
+        packageName: selectedPackage?.name ?? "",
         quantity,
         totalPrice,
       });
@@ -140,6 +157,7 @@ export default function OrderFormSection({
         err instanceof Error
           ? err.message
           : ORDER_FORM_CONTENT.validation.unknownError;
+      alert("Lỗi khi gửi đơn hàng: " + msg);
       setErrorMessage(msg);
     } finally {
       setIsSubmitting(false);
@@ -255,20 +273,21 @@ export default function OrderFormSection({
                   htmlFor="pkgSelect"
                   className="text-xs sm:text-sm font-extrabold text-on-surface flex items-center gap-1.5"
                 >
-                  <Package className="w-4 h-4 text-primary" />
+                  <PackgeIcon className="w-4 h-4 text-primary" />
                   <span>{ORDER_FORM_CONTENT.fields.productPackage.label}</span>
                 </label>
                 <select
                   id="pkgSelect"
-                  value={selectedPackage.id}
+                  value={selectedPackage?.id}
                   onChange={(e) => {
-                    const id = parseInt(e.target.value, 10);
-                    const pkg = PRODUCT_PACKAGES.find((p) => p.id === id);
+                    // const pkg = PRODUCT_PACKAGES.find((p) => p.id === id);
+                    const pkg = packages?.find((p) => p.id === e.target.value);
                     if (pkg) onSelectPackage(pkg);
                   }}
                   className="w-full h-12 px-3.5 rounded-xl bg-surface-container-lowest text-on-surface text-sm border border-outline-variant/40 focus:outline-none focus:ring-2 focus:shadow-xs focus:ring-orange-500/50 focus:border-transparent transition-all font-medium"
                 >
-                  {PRODUCT_PACKAGES.map((pkg) => (
+                  {/* {PRODUCT_PACKAGES.map((pkg) => ( */}
+                  {packages?.map((pkg) => (
                     <option key={pkg.id} value={pkg.id}>
                       {pkg.name}
                     </option>
@@ -328,7 +347,7 @@ export default function OrderFormSection({
             <div className="p-3.5 rounded-xl bg-surface-container-low border border-outline-variant/30 flex flex-col gap-1.5">
               <div className="flex items-center justify-between text-xs text-on-surface-variant">
                 <span>{ORDER_FORM_CONTENT.priceBreakdown.unitPriceLabel}</span>
-                <span>{formatVND(selectedPackage.price)}</span>
+                <span>{formatVND(selectedPackage?.price ?? 0)}</span>
               </div>
               <div className="flex items-center justify-between text-xs text-on-surface-variant">
                 <span>{ORDER_FORM_CONTENT.priceBreakdown.quantityLabel}</span>
@@ -337,9 +356,7 @@ export default function OrderFormSection({
               <div className="flex items-center justify-between text-xs text-on-surface-variant">
                 <span>{ORDER_FORM_CONTENT.priceBreakdown.shippingLabel}</span>
                 <span className="text-secondary font-semibold">
-                  {selectedPackage.id === 3 || quantity >= 2
-                    ? ORDER_FORM_CONTENT.priceBreakdown.freeShippingText
-                    : ORDER_FORM_CONTENT.priceBreakdown.shippingFeeText}
+                  {ORDER_FORM_CONTENT.priceBreakdown.freeShippingText}
                 </span>
               </div>
               <div className="h-[1px] bg-outline-variant/30 my-1" />
@@ -348,7 +365,7 @@ export default function OrderFormSection({
                 <span>
                   {formatVND(
                     totalPrice +
-                      (selectedPackage.id === 3 || quantity >= 2 ? 0 : 20000),
+                      (selectedPackage?.id || quantity >= 2 ? 0 : 20000),
                   )}
                 </span>
               </div>

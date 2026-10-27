@@ -1,7 +1,8 @@
 "use client";
 
-import { GalleryItem, HERO_CONTENT } from "@/content/siteContent";
+import { HERO_CONTENT } from "@/content/siteContent";
 import { trackClickCTA } from "@/lib/analytics/tiktok";
+import { Hero } from "@/types/landingPage.type";
 import {
   BugOff,
   ChevronLeft,
@@ -13,16 +14,20 @@ import {
 import Image from "next/image";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 
-export type { GalleryItem };
 const GALLERY_IMAGES = HERO_CONTENT.galleryImages;
 const TRUST_ICONS = [Sparkles, BugOff, PackageCheck];
 
-export default function HeroSection() {
+export default function HeroSection({
+  eyebrow,
+  description,
+  brandName,
+  ctaText,
+  ctaNote,
+}: Hero & { brandName: string | undefined }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const touchStartX = useRef<number | null>(null);
   const touchEndX = useRef<number | null>(null);
-
-  const totalSlides = GALLERY_IMAGES.length;
+  const totalSlides = GALLERY_IMAGES?.length || 0;
 
   const nextSlide = useCallback(() => {
     setActiveIndex((prev) => (prev + 1) % totalSlides);
@@ -82,7 +87,7 @@ export default function HeroSection() {
 
           <div className="flex flex-col">
             <h1 className="text-primary font-extrabold text-base md:text-lg leading-tight tracking-wide uppercase">
-              {HERO_CONTENT.brandBar.shopName}
+              {brandName ?? HERO_CONTENT.brandBar.shopName}
             </h1>
             <div className="flex items-center gap-1.5 mt-0.5">
               <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block shrink-0"></span>
@@ -121,10 +126,10 @@ export default function HeroSection() {
       {/* Main Headline & Subtitle */}
       <div className="flex flex-col gap-1.5 px-4">
         <h1 className="text-xl sm:text-3xl md:text-4xl font-extrabold text-primary tracking-tight leading-tight">
-          {HERO_CONTENT.title}
+          {eyebrow}
         </h1>
         <p className="text-sm sm:text-base text-on-surface-variant tracking-wide leading-relaxed">
-          {HERO_CONTENT.subtitle}
+          {description}
         </p>
       </div>
 
@@ -247,7 +252,7 @@ export default function HeroSection() {
           }
           className="h-12 sm:h-13 w-full rounded-lg bg-gradient-reverse text-on-primary font-bold text-base flex items-center justify-center gap-2 shadow-md transition-all active:scale-[0.98]"
         >
-          <span>{HERO_CONTENT.ctaButtons.orderNow}</span>
+          <span>{ctaText ?? "ctaText"}</span>
         </a>
 
         <a
@@ -261,7 +266,7 @@ export default function HeroSection() {
           className="h-11 sm:h-13 w-full rounded-lg bg-surface-container-lowest text-primary font-semibold text-sm sm:text-base flex items-center justify-center gap-2 shadow-xs border border-primary/20 hover:bg-surface-container-low transition-all active:scale-[0.98]"
         >
           <PlayCircle className="w-5 h-5 text-secondary" />
-          <span>{HERO_CONTENT.ctaButtons.demoDetails}</span>
+          <span>{ctaNote ?? "ctaNote"}</span>
         </a>
       </div>
     </section>

@@ -1,9 +1,14 @@
 "use client";
 
 import { PROBLEM_SOLUTION_CONTENT } from "@/content/siteContent";
+import { Comparison } from "@/types/landingPage.type";
 import { Check, CheckCircle, X, XCircle } from "lucide-react";
 
-export default function ProblemSolutionSection() {
+export default function ProblemSolutionSection({
+  title,
+  oldProduct,
+  newProduct,
+}: Comparison) {
   return (
     <section className="flex flex-col px-4 py-8 max-w-4xl mx-auto w-full gap-6">
       {/* Header */}
@@ -13,7 +18,7 @@ export default function ProblemSolutionSection() {
           {PROBLEM_SOLUTION_CONTENT.sectionBadge}
         </span>
         <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-primary tracking-tight">
-          {PROBLEM_SOLUTION_CONTENT.sectionTitle}
+          {title || "title"}
         </h2>
         {/* <p className="text-sm sm:text-base text-on-surface-variant max-w-2xl">
           {PROBLEM_SOLUTION_CONTENT.sectionSubtitle}
@@ -26,21 +31,23 @@ export default function ProblemSolutionSection() {
           <div className="flex items-center gap-2.5 text-error">
             <XCircle className="w-6 h-6 shrink-0" />
             <span className="font-extrabold text-base sm:text-lg">
-              {PROBLEM_SOLUTION_CONTENT.problemCard.title}
+              {/* {PROBLEM_SOLUTION_CONTENT.problemCard.title} */}
+              {oldProduct?.name ?? "oldProduct.name"}
             </span>
           </div>
 
           <ul className="flex flex-col gap-3 text-sm text-on-surface-variant">
-            {PROBLEM_SOLUTION_CONTENT.problemCard.items.map((item, idx) => (
+            {/* {PROBLEM_SOLUTION_CONTENT.problemCard.items.map((item, idx) => ( */}
+            {oldProduct?.points.map((item, idx) => (
               <li key={idx} className="flex items-start gap-2.5">
                 <div className="w-5 h-5 rounded-full bg-error/10 text-error flex items-center justify-center shrink-0 mt-0.5">
                   <X className="w-3.5 h-3.5" />
                 </div>
                 <p>
                   <strong className="text-on-surface font-semibold">
-                    {item.bold}
+                    {item.title}
                   </strong>{" "}
-                  {item.text}
+                  {item.description}
                 </p>
               </li>
             ))}
@@ -54,21 +61,23 @@ export default function ProblemSolutionSection() {
           <div className="flex items-center gap-2.5 text-primary">
             <CheckCircle className="w-6 h-6 shrink-0 text-primary" />
             <span className="font-extrabold text-base sm:text-lg">
-              {PROBLEM_SOLUTION_CONTENT.solutionCard.title}
+              {/* {PROBLEM_SOLUTION_CONTENT.solutionCard.title} */}
+              {newProduct?.name ?? "newProduct.name"}
             </span>
           </div>
 
           <ul className="flex flex-col gap-3 text-sm text-on-surface">
-            {PROBLEM_SOLUTION_CONTENT.solutionCard.items.map((item, idx) => (
+            {/* {PROBLEM_SOLUTION_CONTENT.solutionCard.items.map((item, idx) => ( */}
+            {newProduct?.points.map((item, idx) => (
               <li key={idx} className="flex items-start gap-2.5">
                 <div className="w-5 h-5 rounded-full bg-primary-fixed text-primary flex items-center justify-center shrink-0 mt-0.5">
                   <Check className="w-3.5 h-3.5 font-extrabold" />
                 </div>
                 <p>
                   <strong className="text-primary font-extrabold">
-                    {item.bold}
+                    {item.title}
                   </strong>{" "}
-                  {item.text}
+                  {item.description}
                 </p>
               </li>
             ))}

@@ -6,16 +6,19 @@ import {
   ProductPackage,
 } from "@/content/siteContent";
 import { formatVND } from "@/lib/utils";
+import { Package, Product } from "@/types/landingPage.type";
 import { Check, Minus, Plus, Truck } from "lucide-react";
+import { useMemo } from "react";
 
 export { PRODUCT_PACKAGES };
 export type { ProductPackage };
 
 interface PricingSectionProps {
-  selectedPackageId: number;
-  onSelectPackage: (pkg: ProductPackage) => void;
+  selectedPackageId: string | undefined;
+  onSelectPackage: (pkg: Package<Product> | undefined) => void;
   quantity: number;
   onQuantityChange: (qty: number) => void;
+  packages: Package<Product>[] | undefined;
 }
 
 export default function PricingSection({
@@ -23,12 +26,23 @@ export default function PricingSection({
   onSelectPackage,
   quantity,
   onQuantityChange,
+  packages,
 }: PricingSectionProps) {
-  const currentPkg =
-    PRODUCT_PACKAGES.find((p) => p.id === selectedPackageId) ||
-    PRODUCT_PACKAGES[0];
+  const currentPkg = packages?.find((p) => p.id === selectedPackageId);
 
-  const totalPrice = currentPkg.price * quantity;
+  const totalPrice = useMemo(() => {
+    const price = currentPkg?.price ?? 0;
+
+    if (quantity >= 2 && selectedPackageId === "combo-1") {
+      return (price - 25000) * quantity;
+    }
+
+    if (quantity >= 2 && selectedPackageId === "combo-2") {
+      return (price - 30000) * quantity;
+    }
+
+    return price * quantity;
+  }, [quantity, currentPkg?.price, selectedPackageId]);
 
   return (
     <section
@@ -51,13 +65,15 @@ export default function PricingSection({
 
       {/* Package Options List */}
       <div className="flex flex-col gap-3">
-        {PRODUCT_PACKAGES.map((pkg) => {
-          const isSelected = pkg.id === selectedPackageId;
-
+        {packages?.map((pkg) => {
+          const isSelected = pkg?.id === selectedPackageId;
           return (
             <label
               key={pkg.id}
-              onClick={() => onSelectPackage(pkg)}
+              onClick={() => {
+                onSelectPackage(pkg);
+                onQuantityChange(1);
+              }}
               className={`relative flex flex-col p-4 sm:p-5 rounded-2xl bg-surface-container-lowest shadow-xs cursor-pointer transition-all border-2 ${
                 isSelected
                   ? "border-2 border-[#f95d12] shadow-sm bg-[#fffaf5] shadow-[#f95d12]"
@@ -68,7 +84,10 @@ export default function PricingSection({
                 type="radio"
                 name="product_pack"
                 checked={isSelected}
-                onChange={() => onSelectPackage(pkg)}
+                onChange={() => {
+                  onSelectPackage(pkg);
+                  onQuantityChange(1);
+                }}
                 className="sr-only"
               />
 
@@ -76,7 +95,7 @@ export default function PricingSection({
               {pkg.badge && (
                 <div
                   className={`absolute -top-2 right-4 px-2.5 py-0.5 rounded-full text-[10px] uppercase font-extrabold tracking-wider shadow-xs ${
-                    pkg.badgeType === "savings"
+                    pkg.isRecommended
                       ? "bg-tiktok-gradient text-on-primary"
                       : "bg-secondary text-on-secondary"
                   }`}
@@ -105,7 +124,7 @@ export default function PricingSection({
                 <div className="flex flex-col items-end shrink-0">
                   <span
                     className={`font-extrabold text-base sm:text-lg ${
-                      pkg.id === 3 ? "text-secondary" : "text-primary"
+                      pkg.isRecommended ? "text-secondary" : "text-primary"
                     }`}
                   >
                     {formatVND(pkg.price)}
@@ -121,9 +140,9 @@ export default function PricingSection({
               {/* Description & Highlight */}
               <div className="pl-8 pt-1 text-xs sm:text-sm text-on-surface-variant leading-relaxed">
                 <p>{pkg.description}</p>
-                {pkg.highlightNote && (
+                {pkg.isRecommended && (
                   <p className="font-semibold text-secondary mt-0.5">
-                    {pkg.highlightNote}
+                    {pkg.badge}
                   </p>
                 )}
               </div>
@@ -170,9 +189,12 @@ export default function PricingSection({
           </span>
           <span className="text-[11px] text-secondary font-medium flex items-center gap-1 mt-0.5">
             <Truck className="w-3 h-3" />
-            {currentPkg.id === 3 || quantity >= 2
-              ? PRICING_CONTENT.subtotalBox.freeShippingText
-              : PRICING_CONTENT.subtotalBox.fixedShippingText}
+
+            {quantity >= 2 && currentPkg?.id === "combo-1"
+              ? "Được giảm 25.000đ/sản phẩm"
+              : quantity >= 2 && currentPkg?.id === "combo-2"
+                ? "Được giảm 30.000đ/sản phẩm"
+                : PRICING_CONTENT.subtotalBox.fixedShippingText}
           </span>
         </div>
       </div>
