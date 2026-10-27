@@ -4,15 +4,20 @@ import { DetailFeature, PRODUCT_DEMO_CONTENT } from "@/content/siteContent";
 import { getAllVideoUrls } from "@/content/videos";
 import useElementOnScreen from "@/hooks/useElementOnScreen";
 import { cn } from "@/lib/utils";
+import { Features, VideoShowcase } from "@/types/landingPage.type";
 import { CheckCircle2, Play, Volume2, VolumeX } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
 export type { DetailFeature };
 const DETAIL_FEATURES = PRODUCT_DEMO_CONTENT.features;
-const VIDEOS = getAllVideoUrls();
 
-export default function ProductDemoSection() {
+export default function ProductDemoSection({
+  title,
+  description,
+  videos,
+  items,
+}: Partial<VideoShowcase & Features>) {
   const [activeVideoIdx, setActiveVideoIdx] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
@@ -22,6 +27,8 @@ export default function ProductDemoSection() {
     rootMargin: "10px",
     threshold: 0.2,
   });
+  const VIDEOS = getAllVideoUrls(videos || []);
+
   const activeVideo = VIDEOS[activeVideoIdx];
 
   const togglePlay = () => {
@@ -90,10 +97,12 @@ export default function ProductDemoSection() {
             {PRODUCT_DEMO_CONTENT.sectionBadge}
           </span>
           <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-primary tracking-tight">
-            {PRODUCT_DEMO_CONTENT.sectionTitle}
+            {/* {PRODUCT_DEMO_CONTENT.sectionTitle} */}
+            {title ?? "title"}
           </h2>
           <p className="text-sm sm:text-base text-on-surface-variant leading-relaxed">
-            {PRODUCT_DEMO_CONTENT.sectionDescription}
+            {/* {PRODUCT_DEMO_CONTENT.sectionDescription} */}
+            {description ?? "description"}
           </p>
         </div>
         {/* Video Player Card */}
@@ -104,7 +113,7 @@ export default function ProductDemoSection() {
               const isActive = idx === activeVideoIdx;
               return (
                 <button
-                  key={vid.id}
+                  key={vid.badge}
                   type="button"
                   onClick={() => switchVideo(idx)}
                   className={`flex flex-col items-center justify-center gap-1.5 p-2 sm:p-2.5 rounded-md transition-all ${
@@ -119,7 +128,7 @@ export default function ProductDemoSection() {
                       isActive ? "text-primary" : "text-on-surface-variant"
                     }`}
                   >
-                    {vid.label}
+                    {vid.badge}
                   </span>
                 </button>
               );
@@ -206,17 +215,18 @@ export default function ProductDemoSection() {
 
         {/* 4 Detailed Feature Zoom Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-          {DETAIL_FEATURES.map((item, idx) => (
+          {/* {DETAIL_FEATURES.map((item, idx) => ( */}
+          {items?.map((item, idx) => (
             <div
               key={idx}
               className="flex flex-col items-center gap-3.5 sm:p-4 rounded-lg bg-surface-container-lowest shadow-xs border border-outline-variant/30 hover:shadow-sm transition-all"
             >
               <div className="relative w-full h-36 rounded-t-lg overflow-hidden bg-surface-container shrink-0 ">
                 <Image
-                  src={item.imageSrc}
-                  alt={item.imageAlt}
+                  src={item.image || "/images/gallery-1.jpg"}
+                  alt={item.description || ""}
                   fill
-                  // sizes="100px"
+                  sizes="(max-width: 640px) 100vw, 50vw"
                   className="object-cover w-full h-full"
                 />
               </div>

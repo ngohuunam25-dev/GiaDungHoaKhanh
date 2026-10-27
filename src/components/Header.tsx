@@ -1,8 +1,9 @@
 "use client";
 
 import { HEADER_CONTENT } from "@/content/siteContent";
+import { Hero } from "@/types/landingPage.type";
 
-export default function Header() {
+export default function Header({ discountBadge }: Hero) {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 pt-safe bg-tiktok-gradient backdrop-blur-xl border-b border-surface-container-high/60 shadow-[0_1px_8px_rgba(0,0,0,0.03)] transition-all">
       <div className="max-w-4xl mx-auto h-10 px-2 flex items-center justify-between gap-3">
@@ -12,8 +13,8 @@ export default function Header() {
             ⚡
           </div>
           <div className="flex flex-col min-w-0">
-            <span className="font-bold text-xs text-white tracking-tight leading-tight truncate">
-              {HEADER_CONTENT.brandName}
+            <span className="font-bold text-xs text-white tracking-tight leading-tight truncate capitalize">
+              {discountBadge}
             </span>
           </div>
         </div>

@@ -1,12 +1,18 @@
 "use client";
 
 import { ReviewItem, SOCIAL_PROOF_CONTENT } from "@/content/siteContent";
+import { SocialProof } from "@/types/landingPage.type";
 import { Star } from "lucide-react";
 
 export type { ReviewItem };
 const REVIEWS = SOCIAL_PROOF_CONTENT.reviews;
 
-export default function SocialProofSection() {
+export default function SocialProofSection({
+  title,
+  soldCountLabel,
+  averageRating,
+  reviews,
+}: Partial<SocialProof>) {
   return (
     <section className="flex flex-col px-4 py-8 bg-surface-container-low/70 border-y border-outline-variant/20 gap-6 w-full">
       <div className="max-w-4xl mx-auto w-full flex flex-col gap-6">
@@ -17,7 +23,7 @@ export default function SocialProofSection() {
             {SOCIAL_PROOF_CONTENT.sectionBadge}
           </span>
           <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-primary tracking-tight">
-            {SOCIAL_PROOF_CONTENT.sectionTitle}
+            {title ?? SOCIAL_PROOF_CONTENT.sectionTitle}
           </h2>
 
           {/* Rating Summary */}
@@ -31,17 +37,23 @@ export default function SocialProofSection() {
               ))}
             </div>
             <span className="text-xs sm:text-sm font-extrabold text-on-surface ml-1">
-              {SOCIAL_PROOF_CONTENT.ratingSummary.score} (
-              {SOCIAL_PROOF_CONTENT.ratingSummary.reviewCountText})
+              {averageRating
+                ? `${averageRating}/5`
+                : SOCIAL_PROOF_CONTENT.ratingSummary.score}{" "}
+              (
+              {soldCountLabel ??
+                SOCIAL_PROOF_CONTENT.ratingSummary.reviewCountText}
+              )
             </span>
           </div>
         </div>
 
         {/* Reviews Cards List */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
-          {REVIEWS.map((rev) => (
+          {/* {REVIEWS.map((rev) => ( */}
+          {reviews?.map((rev) => (
             <div
-              key={rev.id}
+              key={rev._key}
               className="flex flex-col p-4 sm:p-5 rounded-2xl bg-surface-container-lowest shadow-xs border border-outline-variant/20 gap-3 justify-between"
             >
               <div className="flex flex-col gap-2.5">
@@ -49,13 +61,14 @@ export default function SocialProofSection() {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2.5">
                     <div
-                      className={`w-9 h-9 rounded-full ${rev.avatarBg} ${rev.avatarText} font-extrabold text-xs flex items-center justify-center shrink-0 shadow-xs`}
+                      // className={`w-9 h-9 rounded-full ${rev.avatarBg} ${rev.avatarText} font-extrabold text-xs flex items-center justify-center shrink-0 shadow-xs`}
+                      className={`w-9 h-9 rounded-full bg-primary-fixed text-primary font-extrabold text-xs flex items-center justify-center shrink-0 shadow-xs`}
                     >
-                      {rev.initials}
+                      {rev.customerName.charAt(0)}
                     </div>
                     <div className="flex flex-col">
                       <span className="font-extrabold text-sm text-on-surface leading-tight">
-                        {rev.name}
+                        {rev.customerName}
                       </span>
                       <span className="text-[11px] text-on-surface-variant">
                         {rev.location}
@@ -82,7 +95,7 @@ export default function SocialProofSection() {
 
                 {/* Comment */}
                 <p className="text-xs sm:text-sm text-on-surface leading-relaxed italic">
-                  &ldquo;{rev.comment}&rdquo;
+                  &ldquo;{rev.content}&rdquo;
                 </p>
               </div>
             </div>
