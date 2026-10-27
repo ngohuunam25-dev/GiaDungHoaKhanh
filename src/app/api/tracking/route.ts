@@ -29,7 +29,7 @@ export async function POST(req: Request) {
           error: "Dữ liệu không hợp lệ",
           details: parsed.error.flatten().fieldErrors,
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -37,11 +37,13 @@ export async function POST(req: Request) {
     const orderId = "DH" + Date.now().toString().slice(-8);
 
     // Khởi tạo Resend bên trong Handler để lấy biến môi trường chuẩn xác trên Worker runtime
-    const resendApiKey = process.env.RESEND_API_KEY;
-    const notifyEmail = process.env.ORDER_NOTIFY_EMAIL;
+    const resendApiKey = process.env.NEXT_PUBLIC_RESEND_API_KEY;
+    const notifyEmail = process.env.NEXT_PUBLIC_ORDER_NOTIFY_EMAIL;
 
     if (!resendApiKey || !notifyEmail) {
-      console.error("Thiếu cấu hình RESEND_API_KEY hoặc ORDER_NOTIFY_EMAIL");
+      console.error(
+        "Thiếu cấu hình NEXT_PUBLIC_RESEND_API_KEY hoặc NEXT_PUBLIC_ORDER_NOTIFY_EMAIL",
+      );
     }
 
     const resend = new Resend(resendApiKey);
@@ -76,10 +78,7 @@ export async function POST(req: Request) {
 
     results.forEach((r, i) => {
       if (r.status === "rejected") {
-        console.error(
-          i === 0 ? "[Sheet Error]:" : "[Email Error]:",
-          r.reason
-        );
+        console.error(i === 0 ? "[Sheet Error]:" : "[Email Error]:", r.reason);
       }
     });
 
@@ -87,7 +86,7 @@ export async function POST(req: Request) {
     if (results.every((r) => r.status === "rejected")) {
       return NextResponse.json(
         { ok: false, error: "Không thể lưu đơn hàng và gửi email" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -96,7 +95,7 @@ export async function POST(req: Request) {
     console.error("[Tracking Route Uncaught Error]:", err);
     return NextResponse.json(
       { ok: false, error: err.message || "Lỗi máy chủ" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
