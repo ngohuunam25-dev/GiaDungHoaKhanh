@@ -47,20 +47,20 @@ export async function POST(req: Request) {
       o.pricePerUnit,
       o.note ?? "",
     ]),
-    resend.emails.send({
-      from: "Shop <onboarding@resend.dev>", // đổi sang domain của bạn khi lên production
-      to: process.env.NEXT_PUBLIC_ORDER_NOTIFY_EMAIL!,
-      subject: `Đơn hàng mới ${orderId}`,
-      html: `
-        <h3>Đơn hàng ${orderId}</h3>
-        <p><b>${o.name}</b> - ${o.phone}</p>
-        <p>Địa chỉ: ${o.address}</p>
-        <p>Sản phẩm: ${o.packageName}</p>
-        <p>Số lượng: ${o.quantity}</p>
-        <p>Giá: ${o.pricePerUnit.toLocaleString("vi-VN")}đ</p>
-        <p>Tổng: ${o.totalPrice.toLocaleString("vi-VN")}đ</p>
-        <p>Ghi chú: ${o.note ?? ""}</p>`,
-    }),
+    // resend.emails.send({
+    //   from: "Shop <onboarding@resend.dev>", // đổi sang domain của bạn khi lên production
+    //   to: process.env.NEXT_PUBLIC_ORDER_NOTIFY_EMAIL!,
+    //   subject: `Đơn hàng mới ${orderId}`,
+    //   html: `
+    //     <h3>Đơn hàng ${orderId}</h3>
+    //     <p><b>${o.name}</b> - ${o.phone}</p>
+    //     <p>Địa chỉ: ${o.address}</p>
+    //     <p>Sản phẩm: ${o.packageName}</p>
+    //     <p>Số lượng: ${o.quantity}</p>
+    //     <p>Giá: ${o.pricePerUnit.toLocaleString("vi-VN")}đ</p>
+    //     <p>Tổng: ${o.totalPrice.toLocaleString("vi-VN")}đ</p>
+    //     <p>Ghi chú: ${o.note ?? ""}</p>`,
+    // }),
   ]);
 
   results.forEach((r, i) => {
