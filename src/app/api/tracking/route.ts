@@ -5,7 +5,7 @@ import { z } from "zod";
 
 export const runtime = "nodejs"; // googleapis cần Node runtime
 
-const resend = new Resend(process.env.NEXT_PUBLIC_RESEND_API_KEY);
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 const OrderSchema = z.object({
   name: z.string().min(1),
@@ -47,20 +47,20 @@ export async function POST(req: Request) {
       o.pricePerUnit,
       o.note ?? "",
     ]),
-    // resend.emails.send({
-    //   from: "Shop <onboarding@resend.dev>", // đổi sang domain của bạn khi lên production
-    //   to: process.env.NEXT_PUBLIC_ORDER_NOTIFY_EMAIL!,
-    //   subject: `Đơn hàng mới ${orderId}`,
-    //   html: `
-    //     <h3>Đơn hàng ${orderId}</h3>
-    //     <p><b>${o.name}</b> - ${o.phone}</p>
-    //     <p>Địa chỉ: ${o.address}</p>
-    //     <p>Sản phẩm: ${o.packageName}</p>
-    //     <p>Số lượng: ${o.quantity}</p>
-    //     <p>Giá: ${o.pricePerUnit.toLocaleString("vi-VN")}đ</p>
-    //     <p>Tổng: ${o.totalPrice.toLocaleString("vi-VN")}đ</p>
-    //     <p>Ghi chú: ${o.note ?? ""}</p>`,
-    // }),
+    resend.emails.send({
+      from: "Shop <onboarding@resend.dev>", // đổi sang domain của bạn khi lên production
+      to: process.env.ORDER_NOTIFY_EMAIL!,
+      subject: `Đơn hàng mới ${orderId}`,
+      html: `
+        <h3>Đơn hàng ${orderId}</h3>
+        <p><b>${o.name}</b> - ${o.phone}</p>
+        <p>Địa chỉ: ${o.address}</p>
+        <p>Sản phẩm: ${o.packageName}</p>
+        <p>Số lượng: ${o.quantity}</p>
+        <p>Giá: ${o.pricePerUnit.toLocaleString("vi-VN")}đ</p>
+        <p>Tổng: ${o.totalPrice.toLocaleString("vi-VN")}đ</p>
+        <p>Ghi chú: ${o.note ?? ""}</p>`,
+    }),
   ]);
 
   results.forEach((r, i) => {
