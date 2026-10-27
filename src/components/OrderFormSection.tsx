@@ -18,7 +18,7 @@ import {
   X,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 
 interface OrderFormSectionProps {
   onSelectPackage: (pkg: Package<Product> | undefined) => void;
@@ -52,7 +52,19 @@ export default function OrderFormSection({
     totalPrice: number;
   } | null>(null);
 
-  const totalPrice = selectedPackage?.price ?? 0 * quantity;
+  const totalPrice = useMemo(() => {
+    const price = selectedPackage?.price ?? 0;
+
+    if (quantity >= 2 && selectedPackage?.id === "combo-1") {
+      return (price - 25000) * quantity;
+    }
+
+    if (quantity >= 2 && selectedPackage?.id === "combo-2") {
+      return (price - 30000) * quantity;
+    }
+
+    return price * quantity;
+  }, [quantity, selectedPackage?.price, selectedPackage]);
   const router = useRouter();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

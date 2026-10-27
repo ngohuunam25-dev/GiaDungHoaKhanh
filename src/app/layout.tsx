@@ -1,8 +1,8 @@
+import AnalyticsProvider from "@/components/AnalyticsProvider";
+import { SITE_META } from "@/content/siteContent";
 import type { Metadata, Viewport } from "next";
 import { Be_Vietnam_Pro } from "next/font/google";
 import "./globals.css";
-import AnalyticsProvider from "@/components/AnalyticsProvider";
-import { SITE_META } from "@/content/siteContent";
 
 const beVietnamPro = Be_Vietnam_Pro({
   weight: ["400", "500", "600", "700", "800"],
@@ -12,7 +12,9 @@ const beVietnamPro = Be_Vietnam_Pro({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || SITE_META.defaultUrl),
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL || SITE_META.defaultUrl,
+  ),
   title: SITE_META.title,
   description: SITE_META.description,
   keywords: SITE_META.keywords,
