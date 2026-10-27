@@ -42,3 +42,6 @@ next-env.d.ts
 
 
 .mcp.json
+# open-next / cloudflare
+/.open-next/
+.wrangler/
