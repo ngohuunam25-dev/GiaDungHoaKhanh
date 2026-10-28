@@ -74,7 +74,7 @@ async function getGoogleAccessToken(clientEmail: string, privateKey: string) {
 export async function appendOrderToSheet(row: (string | number)[]) {
   const clientEmail = process.env.GOOGLE_CLIENT_EMAIL;
   let privateKey = process.env.GOOGLE_PRIVATE_KEY;
-  const spreadsheetId = process.env.GOOGLE_SHEET_ID;
+  const spreadsheetId = process.env.NEXT_PUBLIC_GOOGLE_SHEET_ID;
 
   if (!clientEmail || !privateKey || !spreadsheetId) {
     throw new Error("Thiếu biến môi trường Google Sheets API");

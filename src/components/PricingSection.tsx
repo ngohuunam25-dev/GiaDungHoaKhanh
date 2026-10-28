@@ -194,7 +194,7 @@ export default function PricingSection({
               ? "Được giảm 25.000đ/sản phẩm"
               : quantity >= 2 && currentPkg?.id === "combo-2"
                 ? "Được giảm 30.000đ/sản phẩm"
-                : PRICING_CONTENT.subtotalBox.fixedShippingText}
+                : PRICING_CONTENT.subtotalBox.freeShippingText}
           </span>
         </div>
       </div>
