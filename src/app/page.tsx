@@ -8,6 +8,9 @@ async function getLandingPageData(): Promise<LandingPageType | null> {
   try {
     const QUERY = `*[_type == "landingPage"][0]`;
     const page = await sanityClient.fetch(QUERY);
+    if (!page) {
+      throw new Error("Error fetching landing page data");
+    }
     return page;
   } catch (error) {
     console.error("Error fetching landing page data:", error);
@@ -52,6 +55,11 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function Home() {
   const pageData = await getLandingPageData();
-  if (pageData === null) return <>404 not found!</>;
+  if (pageData === null)
+    return (
+      <div className=" h-screen w-screen flex items-center justify-center">
+        404 not found!
+      </div>
+    );
   return <LandingPage {...pageData} />;
 }
