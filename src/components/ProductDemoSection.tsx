@@ -223,7 +223,7 @@ export default function ProductDemoSection({
             >
               <div className="relative w-full h-36 rounded-t-lg overflow-hidden bg-surface-container shrink-0 ">
                 <Image
-                  src={item.image || "/images/gallery-1.jpg"}
+                  src={item.image || "images/gallery-1.jpg"}
                   alt={item.description || ""}
                   fill
                   sizes="(max-width: 640px) 100vw, 50vw"

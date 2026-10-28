@@ -1,13 +1,11 @@
 import type { NextConfig } from "next";
-const isProd = process.env.NODE_ENV === "production";
-const basePath = isProd ? "/GiaDungHoaKhanh" : "";
 const nextConfig: NextConfig = {
   /* config options here */
   // output: "standalone",
   trailingSlash: true,
   output: "export",
-  basePath,
-  assetPrefix: basePath ? `${basePath}/` : undefined,
+  basePath: "/GiaDungHoaKhanh",
+  assetPrefix: `/GiaDungHoaKhanh/`,
   images: {
     formats: ["image/avif", "image/webp"],
     remotePatterns: [

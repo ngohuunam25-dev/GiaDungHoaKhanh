@@ -76,7 +76,7 @@ export const SITE_META = {
     title: "Lồng Bàn Inox 304 Hoa Khánh - Giữ Trọn Vị Ngon Bữa Cơm",
     description:
       "Chất liệu Inox SUS 304 không gỉ, đậy kín sạch sẽ, vệ sinh nhanh chóng trong 15 giây. Giao hàng toàn quốc, kiểm tra trước khi trả tiền.",
-    image: "/images/gallery-1.jpg",
+    image: "images/gallery-1.jpg",
     type: "website",
     locale: "vi_VN",
   },
@@ -115,31 +115,31 @@ export const HERO_CONTENT = {
   galleryImages: [
     {
       id: 1,
-      src: "/images/gallery-1.jpg",
+      src: "images/gallery-1.jpg",
       alt: "Lồng bàn inox 304 Hoa Khánh toàn cảnh",
       label: "Toàn cảnh",
     },
     {
       id: 2,
-      src: "/images/gallery-2.jpg",
+      src: "images/gallery-2.jpg",
       alt: "Góc nghiêng vòm lưới inox thông thoáng",
       label: "Vòm lưới",
     },
     {
       id: 3,
-      src: "/images/gallery-3.jpg",
+      src: "images/gallery-3.jpg",
       alt: "Mặt úp nan tròn cứng cáp và khuyên treo tường",
       label: "Nan & Khuyên treo",
     },
     {
       id: 4,
-      src: "/images/gallery-4.jpg",
+      src: "images/gallery-4.jpg",
       alt: "Tem logo dập nổi chính hãng Hoa Khánh và mắt lưới khít",
       label: "Tem & Mắt lưới",
     },
     {
       id: 5,
-      src: "/images/gallery-5.jpg",
+      src: "images/gallery-5.jpg",
       alt: "Núm cầm inox nguyên khối bo tròn đầm tay",
       label: "Núm cầm",
     },
@@ -182,7 +182,7 @@ export const PRODUCT_DEMO_CONTENT = {
   sectionDescription:
     "Khám phá thiết kế tinh xảo và từng góc cạnh qua hình ảnh & trải nghiệm kiểm thử thực tế tại xưởng.",
   video: {
-    posterSrc: "/images/gallery-2.jpg",
+    posterSrc: "images/gallery-2.jpg",
     posterAlt: "Thử nghiệm độ chịu lực lồng bàn inox",
     badge: "Đang phát",
     duration: "0:45",
@@ -198,28 +198,28 @@ export const PRODUCT_DEMO_CONTENT = {
       title: "Núm & Quai Cầm Nguyên Khối",
       description:
         "Gia công bo tròn tinh xảo từ thanh Inox đặc, nhấc đậy đầm tay, không sắc cạnh, tiện dụng và an toàn tuyệt đối cho người lớn tuổi.",
-      imageSrc: "/images/gallery-4.jpg",
+      imageSrc: "images/gallery-4.jpg",
       imageAlt: "Quai cầm và núm inox nguyên khối",
     },
     {
       title: "Tem Dập Nổi Hoa Khánh Chính Hãng",
       description:
         "Dấu ấn độc quyền xưởng sản xuất Hoa Khánh cùng mắt lưới vi sợi đan xen khít khao, ngăn chặn 100% ruồi muỗi và cả kiến gió.",
-      imageSrc: "/images/gallery-2.jpg",
+      imageSrc: "images/gallery-2.jpg",
       imageAlt: "Tem dập nổi và mắt lưới vi sợi",
     },
     {
       title: "Nan Tròn Cứng Cáp & Móc Treo Tường",
       description:
         "Hệ nan cánh quạt chịu lực gia cường giữ phom vòm đứng vững vàng. Tích hợp móc treo tường thông minh giúp tiết kiệm tối đa không gian bếp.",
-      imageSrc: "/images/gallery-3.jpg",
+      imageSrc: "images/gallery-3.jpg",
       imageAlt: "Khung nan xòe và móc treo tường",
     },
     {
       title: "Vòm Rộng Bao Trọn Mâm Cơm Gia Đình",
       description:
         "Độ cao vòm tiêu chuẩn 20cm thoải mái che phủ các bát tô canh sâu lòng, đĩa gà luộc, đĩa cá và mâm cỗ tròn từ 5-6 món thịnh soạn.",
-      imageSrc: "/images/gallery-1.jpg",
+      imageSrc: "images/gallery-1.jpg",
       imageAlt: "Vòm rộng bao trọn mâm cơm",
     },
   ] as DetailFeature[],
@@ -445,7 +445,7 @@ export const ORDER_FORM_CONTENT = {
 // 9. STICKY MOBILE CTA (THANH DƯỚI ĐÁY MÀN HÌNH DI ĐỘNG)
 // ----------------------------------------------------------------------------
 export const STICKY_CTA_CONTENT = {
-  thumbnailSrc: "/images/gallery-1.jpg",
+  thumbnailSrc: "images/gallery-1.jpg",
   thumbnailAlt: "Thumbnail lồng bàn inox",
   inspectOnDelivery: "Đồng kiểm khi nhận",
   buttonText: "ĐẶT MUA NGAY",
